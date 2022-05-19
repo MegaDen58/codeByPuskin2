@@ -44,6 +44,13 @@ public class Main {
             Pattern patternForNumbers = Pattern.compile(regularForFindNumbers);
             Pattern patternForSymbol = Pattern.compile(regularForNumberOfSymbol);
             Matcher matcherForFindNumbers = patternForNumbers.matcher(lineAndCharacterNumbers.toString());
+            
+            /*
+            Находим номера строк и номера символов.
+            Извлекаем второе число, вычитаем из него единицу и заносим значение в переменную index.
+            По индексу ищем соответствующую букву из текста. 
+            К переменной result добавляем найденную букву.
+             */
             while(matcherForFindNumbers.find()){
                 String t = matcherForFindNumbers.group().replaceAll(" ", "");
                 Matcher matcherForSymbolNumber = patternForSymbol.matcher(t);
@@ -53,7 +60,8 @@ public class Main {
                     result.append(characterText[index]);
                 }
             }
-            System.out.println(result);
+            
+            System.out.println(result); // Выводим полученное слово.
         }
         catch (IOException ex){
             System.out.println(ex.getMessage());
