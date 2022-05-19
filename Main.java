@@ -7,35 +7,50 @@ import java.io.*;
 public class Main {
     public static void main(String[] args) {
         try {
+            /*
+            Считываем стихотворение из текстового файла.
+             */
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("text.txt")));
-            String s;
-            String x = "";
-            while((s = br.readLine()) != null){
-                x += s + " ";
+            String line;
+            StringBuilder readText = new StringBuilder();
+            while((line = br.readLine()) != null){
+                readText.append(line).append(" ");
             }
-            String text = x.toLowerCase(Locale.ROOT);
-            String forIndex = text.replace("\r\n", " ");
-            char[] gg = forIndex.toCharArray();
+            /*
+            В полученном тексте верхние регистры преобразовываем в нижние и меняем переходы на следующую строчку на пробелы.
+            Создаём символьный массив этого текста.
+             */
+            String lowerText = readText.toString().toLowerCase(Locale.ROOT);
+            char[] characterText = lowerText.toCharArray();
 
-            String result = "";
+            StringBuilder result = new StringBuilder(); // Переменная, в которую буду помещаться значения, соответствующие номеру строки и номеру символа.
+
+            /*
+            Считываем номера строк и номера символов и текстового файла.
+             */
             BufferedReader br1 = new BufferedReader(new FileReader("numbers.txt"));
-            String jj = "";
-            int i = 0;
-            while ((s = br1.readLine()) != null) {
-                jj += s;
+            StringBuilder lineAndCharacterNumbers = new StringBuilder();
+            while ((line = br1.readLine()) != null) {
+                lineAndCharacterNumbers.append(line);
             }
-            String reg = "\\d+(\s*);(\s*)\\d+";
-            String reg1 = ";\\d+";
-            Pattern p = Pattern.compile(reg);
-            Pattern p1 = Pattern.compile(reg1);
-            Matcher m = p.matcher(jj);
-            while(m.find()){
-                String t = m.group().replaceAll(" ", "");
-                Matcher m1 = p1.matcher(t);
-                while(m1.find()){
-                    String g = m1.group().replaceAll(";", "");
-                    int index = Integer.parseInt(g) - 1;
-                    result += gg[index];
+
+            /*
+            Создаём 2 регулярны выражения.
+            Первое регулярное выражения для извлечения цифр из скобочек.
+            Второе регулярное выражения для извлечения значения после ";".
+             */
+            String regularForFindNumbers = "\\d+(\s*);(\s*)\\d+";
+            String regularForNumberOfSymbol = ";\\d+";
+            Pattern patternForNumbers = Pattern.compile(regularForFindNumbers);
+            Pattern patternForSymbol = Pattern.compile(regularForNumberOfSymbol);
+            Matcher matcherForFindNumbers = patternForNumbers.matcher(lineAndCharacterNumbers.toString());
+            while(matcherForFindNumbers.find()){
+                String t = matcherForFindNumbers.group().replaceAll(" ", "");
+                Matcher matcherForSymbolNumber = patternForSymbol.matcher(t);
+                while(matcherForSymbolNumber.find()){
+                    String numberOfSymbol = matcherForSymbolNumber.group().replaceAll(";", "");
+                    int index = Integer.parseInt(numberOfSymbol) - 1;
+                    result.append(characterText[index]);
                 }
             }
             System.out.println(result);
